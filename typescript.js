@@ -14,7 +14,7 @@ exports.handlers = {
   },
 
   beforeParse: function(e) {
-    if (['.ts', '.tsx'].includes(path.extname(e.filename))) {
+    if (['.ts', '.tsx', '.vue'].includes(path.extname(e.filename))) {
       // adding const a = 1 ensures that the comments always will be copied,
       // even when there is no javascript inside (just interfaces)
       let result = ts.transpileModule('const _____a = 1; \n' + e.source, {
