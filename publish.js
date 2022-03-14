@@ -316,7 +316,7 @@ function attachModuleSymbols(doclets, modules) {
 
 function buildMemberNav(items, itemHeading, itemsSeen, linktoFn) {
   const subCategories = items.reduce((memo, item) => {
-    const subCategory = item.subCategory || ''
+    const subCategory = (item && item.subCategory) || ''
     memo[subCategory] = memo[subCategory] || []
     return {
       ...memo,
@@ -336,10 +336,10 @@ function buildMemberNav(items, itemHeading, itemsSeen, linktoFn) {
       subCategoryItems.forEach(function(item) {
         var displayName
     
-        if ( !hasOwnProp.call(item, 'longname') ) {
+        if (item && !hasOwnProp.call(item, 'longname') ) {
           itemsNav += '<li>' + linktoFn('', item.name) + '</li>'
         }
-        else if ( !hasOwnProp.call(itemsSeen, item.longname) ) {
+        else if (item && !hasOwnProp.call(itemsSeen, item.longname) ) {
           if (env.conf.templates.default.useLongnameInNav) {
             displayName = item.longname
           } else {
@@ -455,10 +455,10 @@ function buildNav(members, navTypes = null, betterDocs) {
   types.forEach(function(type) {
     if (!members[type]) { return }
     members[type].forEach(function(element) {
-      if (element.access && element.access === 'private') {
+      if (element && element.access && element.access === 'private') {
         return
       }
-      if (element.category) {
+      if (element && element.category) {
         if (!categorised[element.category]){ categorised[element.category] = [] }
         if (!categorised[element.category][type]){ categorised[element.category][type] = [] }
         categorised[element.category][type].push(element)
@@ -721,7 +721,7 @@ exports.publish = function(taffyData, opts, tutorials) {
     generateSourceFiles(sourceFiles, opts.encoding)
   }
 
-  if (members.globals.length) { generate('Global', 'Title', [{kind: 'globalobj'}], globalUrl) }
+  if (members.globals.length) { generate('Global', null, [{kind: 'globalobj'}], globalUrl) }
 
   // index page displays information from package.json and lists files
   files = find({kind: 'file'})
